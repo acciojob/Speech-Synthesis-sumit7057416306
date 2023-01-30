@@ -17,12 +17,12 @@
       </select>
 
       <label for="rate">Rate:</label>
-      <input name="rate" type="range" min="0" max="3" value="1" step="0.1">
+      <input name="rate" type="range" min="0" max="3" value="1" step="0.1" id="rate">
 
       <label for="pitch">Pitch:</label>
 
-      <input name="pitch" type="range" min="0" max="2" step="0.1">
-      <textarea name="text">Hello! I love JavaScript 👍</textarea>
+      <input name="pitch" type="range" min="0" max="2" step="0.1" id="pitch">
+      <textarea name="text">Hello! 👍</textarea>
       <button id="stop">Stop!</button>
       <button id="speak">Speak</button>
 
@@ -37,6 +37,42 @@
   const stopButton = document.querySelector('#stop');
 
   //Your code goes here
+  msg.lang = "en";
+  speakButton.addEventListener("click", () => {
+  msg.text = document.querySelector("textarea").value;
+});
+
+document.querySelector("#rate").addEventListener("input", () => {
+  const rate = document.querySelector("#rate").value;
+  msg.rate = rate;
+});
+
+document.querySelector("#pitch").addEventListener("input", () => {
+  const pitch = document.querySelector("#pitch").value;
+  msg.pitch = pitch;
+});
+
+window.speechSynthesis.onvoiceschanged = () => {
+  voices = window.speechSynthesis.getVoices();
+  msg.voice = voices[0];
+  let voiceSelect = document.querySelector("#voices");
+  voices.forEach((voice, i) => (voiceSelect.options[i] = new Option(voice.name, i)));
+};
+
+document.querySelector("#voices").addEventListener("change", () => {
+  msg.voice = voices[document.querySelector("#voices").value];
+});
+
+speakButton.addEventListener("click", () => {
+  msg.text = document.querySelector("textarea").value;
+  window.speechSynthesis.speak(msg);
+});
+
+
+stopButton.addEventListener("click", () => {
+  window.speechSynthesis.cancel();
+});
+
 </script>
 
 </body>
